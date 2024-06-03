@@ -1,5 +1,6 @@
 package fr.openclassrooms.ydrevet.estate.services;
 
+import fr.openclassrooms.ydrevet.estate.entities.EstateUser;
 import fr.openclassrooms.ydrevet.estate.repositories.EstateUserRepository;
 import org.springframework.stereotype.Service;
 
@@ -10,5 +11,7 @@ public class EstateUserService {
         this.estateUserRepository = estateUserRepository;
     }
 
-
+    public EstateUser getByEmail(String email) {
+        return estateUserRepository.findByEmail(email);
+    }
 }
