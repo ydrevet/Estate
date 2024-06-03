@@ -23,7 +23,7 @@ public class LoginController {
 
     @PostMapping("/api/auth/login")
     public JwtResponse login(@RequestBody LoginRequest loginRequest) {
-        Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.login(), loginRequest.password());
+        Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.email(), loginRequest.password());
 
         Authentication authenticationResponse = this.authenticationManager.authenticate(authenticationRequest);
         if (authenticationResponse.isAuthenticated()) {
