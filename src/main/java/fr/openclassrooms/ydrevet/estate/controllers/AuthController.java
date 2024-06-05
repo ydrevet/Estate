@@ -1,27 +1,31 @@
 package fr.openclassrooms.ydrevet.estate.controllers;
 
+import fr.openclassrooms.ydrevet.estate.dto.EstateUserResponse;
 import fr.openclassrooms.ydrevet.estate.dto.JwtResponse;
 import fr.openclassrooms.ydrevet.estate.dto.LoginRequest;
+import fr.openclassrooms.ydrevet.estate.entities.EstateUser;
+import fr.openclassrooms.ydrevet.estate.services.EstateUserService;
 import fr.openclassrooms.ydrevet.estate.services.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-public class LoginController {
+@RequestMapping("/api/auth")
+public class AuthController {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final EstateUserService estateUserService;
 
-    public LoginController(JwtService jwtService, AuthenticationManager authenticationManager) {
+    public AuthController(JwtService jwtService, AuthenticationManager authenticationManager, EstateUserService estateUserService) {
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.estateUserService = estateUserService;
     }
 
-    @PostMapping("/api/auth/login")
+    @PostMapping("/login")
     public JwtResponse login(@RequestBody LoginRequest loginRequest) {
         Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.email(), loginRequest.password());
 
@@ -32,6 +36,13 @@ public class LoginController {
         } else {
             throw new BadCredentialsException("error");
         }
+    }
+
+    @GetMapping("/me")
+    public EstateUserResponse me(Authentication authentication) {
+        EstateUser estateUser = estateUserService.getByEmail(authentication.getName());
+        EstateUserResponse response = EstateUserResponse.fromEstateUser(estateUser);
+        return response;
     }
 
 }
