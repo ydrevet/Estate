@@ -43,11 +43,13 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((auth) -> {
             auth.requestMatchers("/api/auth/login").permitAll();
+            auth.requestMatchers("/api/auth/register").permitAll();
             auth.anyRequest().permitAll();
         }).exceptionHandling((exceptions) -> {
             exceptions.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint()).accessDeniedHandler(new BearerTokenAccessDeniedHandler());
         }).csrf((csrf) -> {
             csrf.ignoringRequestMatchers("/api/auth/login");
+            csrf.ignoringRequestMatchers("/api/auth/register");
         }).oauth2ResourceServer((oauth) -> oauth.jwt(Customizer.withDefaults())).sessionManagement((session) -> {
             session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         });
