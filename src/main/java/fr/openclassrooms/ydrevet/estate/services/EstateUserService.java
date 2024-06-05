@@ -2,7 +2,9 @@ package fr.openclassrooms.ydrevet.estate.services;
 
 import fr.openclassrooms.ydrevet.estate.dto.RegistrationRequest;
 import fr.openclassrooms.ydrevet.estate.entities.EstateUser;
+import fr.openclassrooms.ydrevet.estate.exceptions.UserNotFoundException;
 import fr.openclassrooms.ydrevet.estate.repositories.EstateUserRepository;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +34,9 @@ public class EstateUserService {
         estateUser.setCreatedAt(now);
         estateUser.setUpdatedAt(now);
         return estateUserRepository.save(estateUser);
+    }
+
+    public EstateUser getById(long id) {
+        return this.estateUserRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
     }
 }
