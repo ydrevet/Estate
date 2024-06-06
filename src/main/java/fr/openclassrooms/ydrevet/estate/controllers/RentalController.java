@@ -5,6 +5,7 @@ import fr.openclassrooms.ydrevet.estate.dto.RentalsResponse;
 import fr.openclassrooms.ydrevet.estate.entities.Rental;
 import fr.openclassrooms.ydrevet.estate.services.RentalService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,5 +26,11 @@ public class RentalController {
         List<Rental> rentals = this.rentalService.getAll();
         List<RentalResponse> response = rentals.stream().map(RentalResponse::fromRental).collect(Collectors.toList());
         return new RentalsResponse(response);
+    }
+
+    @GetMapping("/{id}")
+    public RentalResponse getRental(@PathVariable Long id) {
+        Rental rental = this.rentalService.getRental(id);
+        return RentalResponse.fromRental(rental);
     }
 }

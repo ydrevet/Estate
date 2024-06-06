@@ -1,6 +1,7 @@
 package fr.openclassrooms.ydrevet.estate.services;
 
 import fr.openclassrooms.ydrevet.estate.entities.Rental;
+import fr.openclassrooms.ydrevet.estate.exceptions.RentalNotFoundException;
 import fr.openclassrooms.ydrevet.estate.repositories.RentalRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,5 +17,9 @@ public class RentalService {
 
     public List<Rental> getAll() {
         return this.rentalRepository.findAll();
+    }
+
+    public Rental getRental(Long id) {
+        return this.rentalRepository.findById(id).orElseThrow(() -> new RentalNotFoundException(id));
     }
 }
