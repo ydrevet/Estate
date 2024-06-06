@@ -37,6 +37,6 @@ public class EstateUserService {
     }
 
     public EstateUser getById(long id) {
-        return this.estateUserRepository.findById(id).orElseThrow(() -> new UserNotFoundException());
+        return this.estateUserRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
 }
