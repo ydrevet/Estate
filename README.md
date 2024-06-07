@@ -24,7 +24,7 @@ Trois variables d'environnement doivent être définies avant le lancement de l�
 - DATABASE_USER, le nom de l’utilisateur lié à la base de données
 - DATABASE_PASSWD, le mot de passe de l’utilisateur lié à la base de données
 
-Une fois ces variales définies, l’application peut être lancée via le goal `spring-boot:run`.
+Une fois ces variales définies, l’application peut être lancée via le goal `spring-boot:run`. Elle écoutera alors sur le port 3001.
 
 Exemple sous Windows :
 ```powershell
@@ -38,3 +38,7 @@ Exemple sous Linux et macOS :
 ```bash
 DATABASE_URL=jdbc:mariadb://localhost:3306/chatop DATABASE_USER=chatop DATABASE_PASSWD=chatop ./mvnw spring-boot:run
 ```
+
+## Accès à la documentation Swagger UI
+
+Une fois l’application lancée, il est possible d’accèder à Swagger UI depuis l’addresse [http://localhost:3001/swagger-ui.html](http://localhost:3001/swagger-ui.html)
