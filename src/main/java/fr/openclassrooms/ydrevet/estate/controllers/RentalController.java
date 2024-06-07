@@ -5,6 +5,7 @@ import fr.openclassrooms.ydrevet.estate.dto.RentalResponse;
 import fr.openclassrooms.ydrevet.estate.dto.RentalsResponse;
 import fr.openclassrooms.ydrevet.estate.entities.EstateUser;
 import fr.openclassrooms.ydrevet.estate.entities.Rental;
+import fr.openclassrooms.ydrevet.estate.exceptions.UnAuthorizedException;
 import fr.openclassrooms.ydrevet.estate.services.EstateUserService;
 import fr.openclassrooms.ydrevet.estate.services.RentalService;
 import fr.openclassrooms.ydrevet.estate.services.StorageBackend;
@@ -64,6 +65,22 @@ public class RentalController {
         rentalService.create(newRental);
 
         return new MessageResponse("Rental created!");
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public MessageResponse updateRental(@PathVariable Long id, @RequestParam String name, @RequestParam String description, @RequestParam Long surface, @RequestParam Long price, Authentication authentication) {
+        Rental rentalToUpdate = rentalService.getRental(id);
+        EstateUser currentUser = this.estateUserService.getByEmail(authentication.getName());
+        if (rentalToUpdate.getOwner() != currentUser) {
+            throw new UnAuthorizedException("Vous n’êtes pas le propriétaire de cette location");
+        }
+        rentalToUpdate.setName(name);
+        rentalToUpdate.setDescription(description);
+        rentalToUpdate.setSurface(surface);
+        rentalToUpdate.setPrice(price);
+        this.rentalService.update(rentalToUpdate);
+
+        return new MessageResponse("Rental updated!");
     }
 
     @GetMapping("/pictures/{filename:.+}")

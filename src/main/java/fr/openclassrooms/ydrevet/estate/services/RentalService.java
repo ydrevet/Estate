@@ -29,4 +29,9 @@ public class RentalService {
         newRental.setUpdatedAt(Instant.now());
         this.rentalRepository.save(newRental);
     }
+
+    public void update(Rental rentalToUpdate) {
+        rentalToUpdate.setUpdatedAt(Instant.now());
+        this.rentalRepository.save(rentalToUpdate);
+    }
 }
