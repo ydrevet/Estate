@@ -9,6 +9,10 @@ import fr.openclassrooms.ydrevet.estate.exceptions.UnAuthorizedException;
 import fr.openclassrooms.ydrevet.estate.services.EstateUserService;
 import fr.openclassrooms.ydrevet.estate.services.RentalService;
 import fr.openclassrooms.ydrevet.estate.services.StorageBackend;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,6 +26,8 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Tag(name = "Rentals")
+@SecurityRequirement(name = "jwt")
 @RestController
 @RequestMapping("/api/rentals")
 public class RentalController {
@@ -35,6 +41,10 @@ public class RentalController {
         this.estateUserService = estateUserService;
     }
 
+    @Operation(
+            summary = "Liste des locations.",
+            description = "Retourne une liste de l’ensemble des locations présentes en base de données."
+    )
     @GetMapping
     public RentalsResponse listRentals() {
         List<Rental> rentals = this.rentalService.getAll();
@@ -42,12 +52,20 @@ public class RentalController {
         return new RentalsResponse(response);
     }
 
+    @Operation(
+            summary = "Détails d’une location.",
+            description = "Retourne les détails d’une location en particulier."
+    )
     @GetMapping("/{id}")
     public RentalResponse getRental(@PathVariable Long id) {
         Rental rental = this.rentalService.getRental(id);
         return RentalResponse.fromRental(rental);
     }
 
+    @Operation(
+            summary = "Création d’une location.",
+            description = "Création d’une nouvelle location, incluant sa photographie."
+    )
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public MessageResponse createRental(@RequestParam String name, @RequestParam String description, @RequestParam Long surface, @RequestParam Long price, MultipartFile picture, Authentication authentication) {
@@ -67,6 +85,10 @@ public class RentalController {
         return new MessageResponse("Rental created!");
     }
 
+    @Operation(
+            summary = "Édition d’une location",
+            description = "Édition d’une location déjà existante."
+    )
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public MessageResponse updateRental(@PathVariable Long id, @RequestParam String name, @RequestParam String description, @RequestParam Long surface, @RequestParam Long price, Authentication authentication) {
         Rental rentalToUpdate = rentalService.getRental(id);
@@ -83,6 +105,7 @@ public class RentalController {
         return new MessageResponse("Rental updated!");
     }
 
+    @Hidden
     @GetMapping("/pictures/{filename:.+}")
     public ResponseEntity<Resource> servePicture(@PathVariable String filename) {
         Resource resource = this.storageBackend.load(filename);
