@@ -17,6 +17,22 @@ CREATE USER 'chatop'@'%' IDENTIFIED BY 'chatop';
 GRANT ALL PRIVILEGES ON chatop.* TO 'chatop'@'%';
 ```
 
+Les tables de la base de données seront initialisées par Flyway lors de l’initialisation de l’application.
+
+## Génération d’une paire de clés publique / privée
+
+Une paire de clés RSA est nécessaire pour la signature des tokens JWT. 
+Deux fichiers sont nécessaires :
+- `src/main/resources/priv.pem` : clé privée
+- `src/main/resources/pub.pem` : clé publique
+
+Ces fichiers peuvent être générés avec la commande suivante sur un système UNIX disposant d’OpenSSL :
+```bash
+openssl genpkey -quiet -algorithm rsa | tee priv.pem | openssl pkey -pubout -out pub.pem
+```
+
+Si OpenSSL n’est pas disponible sur votre machine, [un outil en ligne](https://cryptotools.net/rsagen) peut générer cette paire de clés.
+
 ## Lancement de l'application
 
 Trois variables d'environnement doivent être définies avant le lancement de l’application.
@@ -24,7 +40,7 @@ Trois variables d'environnement doivent être définies avant le lancement de l�
 - DATABASE_USER, le nom de l’utilisateur lié à la base de données
 - DATABASE_PASSWD, le mot de passe de l’utilisateur lié à la base de données
 
-Une fois ces variales définies, l’application peut être lancée via le goal `spring-boot:run`. Elle écoutera alors sur le port 3001.
+Une fois ces variales définies, l’application peut être lancée via le goal Maven `spring-boot:run`. Elle écoutera alors sur le port 3001.
 
 Exemple sous Windows :
 ```powershell
