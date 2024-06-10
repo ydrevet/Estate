@@ -7,4 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface EstateUserRepository extends JpaRepository<EstateUser, Long> {
     EstateUser findByEmail(String email);
+
+    boolean existsByEmail(String email);
 }

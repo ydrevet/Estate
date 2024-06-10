@@ -5,6 +5,7 @@ import fr.openclassrooms.ydrevet.estate.dto.JwtResponse;
 import fr.openclassrooms.ydrevet.estate.dto.LoginRequest;
 import fr.openclassrooms.ydrevet.estate.dto.RegistrationRequest;
 import fr.openclassrooms.ydrevet.estate.entities.EstateUser;
+import fr.openclassrooms.ydrevet.estate.exceptions.UserAlreadyRegisteredException;
 import fr.openclassrooms.ydrevet.estate.services.EstateUserService;
 import fr.openclassrooms.ydrevet.estate.services.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,6 +68,10 @@ public class AuthController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public JwtResponse register(@RequestBody RegistrationRequest registrationRequest) {
+        if (this.estateUserService.isAlreadyRegisteres(registrationRequest.email())) {
+            throw new UserAlreadyRegisteredException(registrationRequest.email());
+        }
+
         this.estateUserService.register(registrationRequest);
         Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(registrationRequest.email(), registrationRequest.password());
         Authentication authenticationResponse = this.authenticationManager.authenticate(authenticationRequest);

@@ -2,6 +2,7 @@ package fr.openclassrooms.ydrevet.estate.controllers.advices;
 
 import fr.openclassrooms.ydrevet.estate.dto.MessageResponse;
 import fr.openclassrooms.ydrevet.estate.exceptions.UnAuthorizedException;
+import fr.openclassrooms.ydrevet.estate.exceptions.UserAlreadyRegisteredException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,4 +23,9 @@ public class AuthErrorControllerAdvice {
         return new MessageResponse(e.getMessage());
     }
 
+    @ExceptionHandler(UserAlreadyRegisteredException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public MessageResponse userAlreadyRegisteredExceptionHandler(UserAlreadyRegisteredException e) {
+        return new MessageResponse(e.getMessage());
+    }
 }

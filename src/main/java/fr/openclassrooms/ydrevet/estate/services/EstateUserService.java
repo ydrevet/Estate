@@ -39,4 +39,8 @@ public class EstateUserService {
     public EstateUser getById(long id) {
         return this.estateUserRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
+
+    public boolean isAlreadyRegisteres(String email) {
+        return this.estateUserRepository.existsByEmail(email);
+    }
 }
