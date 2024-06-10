@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -39,14 +38,9 @@ public class AuthController {
     @PostMapping("/login")
     public JwtResponse login(@RequestBody LoginRequest loginRequest) {
         Authentication authenticationRequest = UsernamePasswordAuthenticationToken.unauthenticated(loginRequest.email(), loginRequest.password());
-
         Authentication authenticationResponse = this.authenticationManager.authenticate(authenticationRequest);
-        if (authenticationResponse.isAuthenticated()) {
-            String jwtToken = jwtService.generateToken(authenticationResponse);
-            return new JwtResponse(jwtToken);
-        } else {
-            throw new BadCredentialsException("error");
-        }
+        String jwtToken = jwtService.generateToken(authenticationResponse);
+        return new JwtResponse(jwtToken);
     }
 
     @Operation(
