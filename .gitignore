@@ -33,3 +33,5 @@ build/
 .vscode/
 
 upload/
+# Clés de chiffrement
+*.pem
