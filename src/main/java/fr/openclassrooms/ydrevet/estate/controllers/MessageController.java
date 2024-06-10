@@ -9,6 +9,9 @@ import fr.openclassrooms.ydrevet.estate.exceptions.UnAuthorizedException;
 import fr.openclassrooms.ydrevet.estate.services.EstateMessageService;
 import fr.openclassrooms.ydrevet.estate.services.EstateUserService;
 import fr.openclassrooms.ydrevet.estate.services.RentalService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
+@Tag(name = "Messages")
+@SecurityRequirement(name = "jwt")
 @RestController
 @RequestMapping("/api/messages")
 public class MessageController {
@@ -31,6 +36,9 @@ public class MessageController {
         this.estateMessageService = estateMessageService;
     }
 
+    @Operation(
+            summary = "Envoie un message à une location."
+    )
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public MessageResponse sendMessage(@RequestBody EstateMessageRequest messageRequest, Authentication authentication) {
